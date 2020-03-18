@@ -122,17 +122,12 @@ Module.register('MMM-pihole-stats', {
 					Log.error(self.name + ': Could not load pi-hole summary.');
 				}
 
-				if (retry) {
-					self.scheduleUpdate((self.loaded) ? -1 : self.config.retryDelay);
-				}
 			}
 		};
 		statsSummaryRequest.send();
 
 		if (self.config.showSources) {
 			var url = this.config.apiURL + '?getQuerySources';
-			var retry = true;
-
 			var statsSourcesRequest = new XMLHttpRequest();
 			statsSourcesRequest.open('GET', url, true);
 			statsSourcesRequest.onreadystatechange = function() {
@@ -142,13 +137,12 @@ Module.register('MMM-pihole-stats', {
 					} else {
 						Log.error(self.name + ': Could not load pi-hole sources.');
 					}
-
-					if (retry) {
-						self.scheduleUpdate((self.loaded) ? -1 : self.config.retryDelay);
-					}
 				}
 			};
 			statsSourcesRequest.send();
+		}
+		if (retry) {
+			self.scheduleUpdate((self.loaded) ? -1 : self.config.retryDelay);
 		}
 
 	},
